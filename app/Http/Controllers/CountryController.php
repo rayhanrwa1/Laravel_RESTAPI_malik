@@ -2,93 +2,96 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Quote;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
-class QuoteController extends Controller
+class CountryController extends Controller
 {
     public function index(): JsonResponse
     {
-        $quotes = Quote::with('author')->get();
+        $Country = Country::all();
+
         return response()->json([
             'success' => true,
-            'data' => $quotes,
+            'data' => $Country,
         ]);
     }
 
     public function store(Request $request): JsonResponse
     {
         $validatedData = $request->validate([
-            'content' => 'required|string',
+            'name' => 'required|string|max:255',
+            'id_counrty' => 'required|string|max:255',
         ]);
 
-        $quote = Quote::create($validatedData);
+        $author = Country::create($validatedData);
 
         return response()->json([
             'success' => true,
-            'message' => 'Quote created successfully.',
-            'data' => $quote,
+            'message' => 'Author created successfully.',
+            'data' => $author,
         ], 201);
     }
 
     public function show($id): JsonResponse
     {
-        $quote = Quote::with('author')->find($id);
+        $Country = Country::find($id);
 
-        if (!$quote) {
+        if (!$Country) {
             return response()->json([
                 'success' => false,
-                'message' => 'Quote not found.',
+                'message' => 'Author not found.',
             ], 404);
         }
 
         return response()->json([
             'success' => true,
-            'data' => $quote,
+            'data' => $Country,
         ]);
     }
 
     public function update(Request $request, $id): JsonResponse
     {
-        $quote = Quote::find($id);
+        $Country = Country::find($id);
 
-        if (!$quote) {
+        if (!$Country) {
             return response()->json([
                 'success' => false,
-                'message' => 'Quote not found.',
+                'message' => 'Author not found.',
             ], 404);
         }
 
         $validatedData = $request->validate([
-            'content' => 'sometimes|required|string',
+            'name' => 'sometimes|required|string|max:255',
+            'id_counrty' => 'required|string|max:255',
         ]);
 
-        $quote->update($validatedData);
+        $Country->update($validatedData);
 
         return response()->json([
             'success' => true,
-            'message' => 'Quote updated successfully.',
-            'data' => $quote,
+            'message' => 'Author updated successfully.',
+            'data' => $Country,
         ]);
     }
 
     public function destroy($id): JsonResponse
     {
-        $quote = Quote::find($id);
+        $Country = Country::find($id);
 
-        if (!$quote) {
+        if (!$Country) {
             return response()->json([
                 'success' => false,
-                'message' => 'Quote not found.',
+                'message' => 'Author not found.',
             ], 404);
         }
 
-        $quote->delete();
+        $Country->delete();
 
         return response()->json([
             'success' => true,
-            'message' => 'Quote deleted successfully.',
+            'message' => 'Author deleted successfully.',
         ]);
     }
 }

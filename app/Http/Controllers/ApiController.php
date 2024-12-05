@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Quote;
 use App\Models\Author;
+use App\Models\Country;
 use Illuminate\Http\Request;
 
 class ApiController extends Controller
@@ -20,11 +21,14 @@ class ApiController extends Controller
         return response()->json(Author::all());
     }
 
+    public function getCountry()
+    {
+        return response()->json(Country::all());
+    }
     // Create a new quote
     public function createQuote(Request $request)
     {
         $request->validate([
-            'author_id' => 'required|exists:authors,id',
             'content' => 'required|string',
         ]);
 
@@ -42,6 +46,16 @@ class ApiController extends Controller
 
         $author = Author::create($request->all());
         return response()->json($author, 201);
+    }
+    public function createCountry(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'id_counrty' => 'required|string',
+        ]);
+
+        $country = Country::create($request->all());
+        return response()->json($country, 201);
     }
 
     // Update a quote
@@ -76,6 +90,22 @@ class ApiController extends Controller
     {
         $author = Author::findOrFail($id);
         $author->delete();
+
+        return response()->json(null, 204);
+    }
+    public function updateCountry(Request $request, $id)
+    {
+        $Country = Country::findOrFail($id);
+        $Country->update($request->all());
+
+        return response()->json($Country);
+    }
+
+    // Delete an author
+    public function deleteCountry($id)
+    {
+        $Country = Country::findOrFail($id);
+        $Country->delete();
 
         return response()->json(null, 204);
     }
